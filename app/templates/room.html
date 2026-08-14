@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="panel">
+    <div class="muted">Debating</div>
+    <div class="question">{{ topic_question }}</div>
+    <div class="participants">
+      <span><b>{{ names.get(1, "—") }}</b> (P1)</span>
+      <span><b>{{ names.get(2, "waiting…") }}</b> (P2)</span>
+    </div>
+  </div>
+
+  {% if status == "waiting" %}
+    <div class="panel">
+      <p><b>Waiting for a second participant.</b></p>
+      <label for="shareurl">Share this link to invite them</label>
+      <input type="text" id="shareurl" readonly onclick="this.select()" />
+      <p class="muted">The debate starts automatically when they join.</p>
+    </div>
+    <script>document.getElementById('shareurl').value = location.href;</script>
+
+  {% elif status in ["live", "ended"] %}
+    <div class="panel">
+      <div id="messages"
+           hx-get="/s/{{ sid }}/messages"
+           hx-trigger="load, every 1500ms"
+           hx-swap="innerHTML"></div>
+    </div>
+    <script>
+      // Keep the message pane pinned to the newest message ONLY when the reader is
+      // already at the bottom; otherwise preserve their scroll position across the
+      // 1.5s polls. (An innerHTML swap resets scrollTop to the top on its own, which
+      // is the jump-to-top bug; unconditionally forcing the bottom broke scrolling up.)
+      (function () {
+        var pane = document.getElementById('messages');
+        if (!pane) return;
+        var STICK_THRESHOLD = 48;       // px from the bottom still counts as "at bottom"
+        var stick = true, prevTop = 0;
+        function atBottom() {
+          return pane.scrollHeight - pane.scrollTop - pane.clientHeight <= STICK_THRESHOLD;
+        }
+        pane.addEventListener('scroll', function () { stick = atBottom(); });
+        pane.addEventListener('htmx:beforeSwap', function () {
+          prevTop = pane.scrollTop;     // remember position + intent before the swap
+          stick = atBottom();
+        });
+        pane.addEventListener('htmx:afterSwap', function () {
+          pane.scrollTop = stick ? pane.scrollHeight : prevTop;
+        });
+      })();
+    </script>
+
+    {% if status == "live" and is_participant %}
+      <div class="panel">
+        <form hx-post="/s/{{ sid }}/messages" hx-swap="none"
+              hx-on::after-request="if(event.detail.successful) this.reset()">
+          <div class="row">
+            <textarea class="grow" name="content" rows="2" required
+                      placeholder="Write a message…  (Enter to send · Shift+Enter for a new line)"
+                      onkeydown="if(event.key==='Enter' && !event.shiftKey){event.preventDefault(); this.form.requestSubmit();}"></textarea>
+            <button type="submit">Send</button>
+          </div>
+        </form>
+      </div>
+    {% elif status == "ended" %}
+      <p class="muted" style="text-align:center">This debate has ended.</p>
+    {% endif %}
+  {% endif %}
+
+  {% if is_participant and status != "ended" %}
+    <form method="post" action="/s/{{ sid }}/end" style="margin-top:0.75rem"
+          onsubmit="return confirm('End this debate for both participants?')">
+      <button type="submit" class="ghost">End debate</button>
+    </form>
+  {% endif %}
+
+  {% if status != "ended" %}
+    <span hx-get="/s/{{ sid }}/status?seen={{ status }}"
+          hx-trigger="every 2s" hx-swap="none" style="display:none"></span>
+  {% endif %}
+{% endblock %}

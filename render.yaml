@@ -1,0 +1,22 @@
+# Render Blueprint for Buoy.
+# Decision (see TASKS.md): Starter plan + persistent disk + SQLite, single
+# instance. The disk is unused until the data model lands (T2); configuring it
+# now means we don't reconfigure the service later.
+services:
+  - type: web
+    name: buoy
+    runtime: python
+    plan: starter
+    numInstances: 1            # SQLite requires a single writer process
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /healthz
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.9"
+      - key: DATABASE_PATH
+        value: /var/data/buoy.db   # on the persistent disk, not the app dir
+    disk:
+      name: buoy-data
+      mountPath: /var/data
+      sizeGB: 1

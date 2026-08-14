@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="panel">
+    <div class="muted">You're joining a debate on</div>
+    <div class="question">{{ topic_question }}</div>
+    <form method="post" action="/s/{{ sid }}/join">
+      <label for="display_name">Your name</label>
+      <div class="row">
+        <input class="grow" type="text" id="display_name" name="display_name"
+               placeholder="e.g. Sam" autocomplete="off" />
+        <button type="submit">Join debate</button>
+      </div>
+    </form>
+  </div>
+{% endblock %}

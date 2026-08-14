@@ -1,0 +1,8 @@
+{% for r in rows %}
+  <div class="msg {{ r.kind }}">
+    {% if r.label %}<div class="who">{{ r.label }}</div>{% endif %}
+    <div class="bubble">{{ r.content }}</div>
+  </div>
+{% else %}
+  <div class="empty">No messages yet — start the conversation.</div>
+{% endfor %}

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Buoy</title>
+  <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+  <style>
+    :root { color-scheme: light; --ink:#1a2230; --muted:#5b6b7f; --line:#e3e8ee;
+            --bg:#f7f9fb; --panel:#ffffff; --accent:#2f6df6; --accent-ink:#fff; }
+    * { box-sizing: border-box; }
+    body { margin:0; min-height:100vh; background:var(--bg); color:var(--ink);
+           font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+           display:flex; flex-direction:column; align-items:center; }
+    a { color:var(--accent); }
+    .wrap { width:100%; max-width:760px; padding:1.5rem; }
+    .brand { font-size:1.6rem; font-weight:700; letter-spacing:-0.02em; }
+    .tagline { color:var(--muted); font-size:0.9rem; margin-top:0.1rem; }
+    .question { font-size:1.25rem; font-weight:600; line-height:1.35; margin:0.75rem 0; }
+    .panel { background:var(--panel); border:1px solid var(--line); border-radius:12px;
+             padding:1.1rem 1.2rem; margin-top:1rem; }
+    .muted { color:var(--muted); font-size:0.9rem; }
+    label { display:block; font-size:0.85rem; color:var(--muted); margin-bottom:0.3rem; }
+    input[type=text], textarea { width:100%; padding:0.6rem 0.7rem;
+                       border:1px solid var(--line); border-radius:8px; font-size:1rem;
+                       background:#fff; color:var(--ink); font-family:inherit; }
+    textarea { resize:vertical; min-height:2.7rem; line-height:1.4; }
+    button { background:var(--accent); color:var(--accent-ink); border:none;
+             border-radius:8px; padding:0.6rem 1rem; font-size:0.95rem; font-weight:600;
+             cursor:pointer; }
+    button.ghost { background:transparent; color:var(--muted); border:1px solid var(--line);
+                   font-weight:500; }
+    .row { display:flex; gap:0.5rem; align-items:flex-end; }
+    .row > * { margin:0; }
+    .grow { flex:1; }
+    /* chat */
+    .participants { display:flex; gap:1rem; font-size:0.9rem; color:var(--muted); }
+    .participants b { color:var(--ink); }
+    #messages { max-height:52vh; overflow-y:auto; display:flex; flex-direction:column;
+                gap:0.5rem; padding:0.25rem; }
+    .msg { max-width:78%; }
+    .msg .who { font-size:0.72rem; color:var(--muted); margin:0 0.3rem 0.15rem; }
+    .msg .bubble { padding:0.5rem 0.75rem; border-radius:12px; line-height:1.4;
+                   white-space:pre-wrap; word-wrap:break-word; }
+    .msg.other { align-self:flex-start; }
+    .msg.other .bubble { background:#eef1f5; }
+    .msg.me { align-self:flex-end; }
+    .msg.me .who { text-align:right; }
+    .msg.me .bubble { background:var(--accent); color:#fff; }
+    .msg.buoy { align-self:center; max-width:88%; }
+    .msg.buoy .bubble { background:#fff7e6; border:1px solid #f0dfb8; }
+    .msg.system { align-self:center; }
+    .msg.system .bubble { background:transparent; color:var(--muted); font-size:0.85rem; }
+    .empty { color:var(--muted); text-align:center; padding:1rem; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="brand">Buoy</div>
+    <div class="tagline">a place to think together</div>
+    {% block content %}{% endblock %}
+  </div>
+</body>
+</html>

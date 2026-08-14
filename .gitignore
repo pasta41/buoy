@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+
+# SQLite (local dev DB; production data lives on Render's persistent disk)
+*.db
+*.db-wal
+*.db-shm
+
+# Env / secrets
+.env
+
+# Working deliverable drafts (kept local; final artifacts are submitted separately)
+tmp-outputs/
+
+# OS
+.DS_Store

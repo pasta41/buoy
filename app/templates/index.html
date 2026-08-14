@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="panel">
+    <div class="muted">Today's question</div>
+    <div class="question">{{ topic_question }}</div>
+    <form method="post" action="/sessions">
+      <label for="display_name">Your name</label>
+      <div class="row">
+        <input class="grow" type="text" id="display_name" name="display_name"
+               placeholder="e.g. Alex" autocomplete="off" />
+        <button type="submit">Start a new session</button>
+      </div>
+    </form>
+    <p class="muted" style="margin-bottom:0">
+      Start a session, then share the link with one other person to debate.
+      Buoy moderates.
+    </p>
+  </div>
+{% endblock %}
